@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title>Cargando JSON! OOOO</title>
+</head>
+<body>
+
+<div id="tabla"></div>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+<script>
+
+ function leerJson() {
+            $.getJSON("links.json",function(datos){ JSONplay(datos) });
+        }
+
+
+function JSONplay(datosJSON)
+{
+	var datos = datosJSON;
+	var links = datos.LinksDeInicio.links;
+
+	$.each(links, function(i, item) {
+		var link = item.link;
+		$.each(link, function(i, item) {
+			var texto = item.text;
+			var imagen = item.img;
+			var url = item.url;
+			$$("tablaLinks").add(item);
+		});
+	});
+}
+
+leerJson();
+
+</script>
+<link rel="stylesheet" href="webix.trial/codebase/webix.css">
+<link href="webix.trial/codebase/skins/clouds.css" rel="stylesheet" type="text/css">
+<script src="webix.trial/codebase/webix.js"></script>
+<script>
+webix.ready(function(){
+	webix.ui({
+		id : 'tablaLinks',
+		view:"datatable",
+		container:"tabla",
+		columns:[
+			{ id:"text",header:"Texto",	width:200},
+			{ id:"url",	header:"Url" ,	width:400},
+			{ id:"img",	header:"Imagen",width:200}
+		],
+		autoheight:true,
+		autowidth:true,
+		rowHeight:80
+	});
+
+	$$('tablaLinks').attachEvent("onBeforeAdd", function(id, obj, index){
+		obj.url = '<a target="_blank" href="'+obj.url+'">'+obj.url+'</a>';
+		if(obj.img.indexOf('http') < 0){
+	    	obj.img = '<img width="80" src="img/'+obj.img+'">';
+		}else{
+			obj.img = '<img width="80" src="'+obj.img+'">';
+		}
+	});
+
+});
+</script>
+
+
+</body>
+</html>
